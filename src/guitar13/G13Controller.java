@@ -8,6 +8,7 @@ package guitar13;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.stream.Stream;
 import javafx.event.ActionEvent;
@@ -34,7 +35,11 @@ import javax.swing.JFileChooser;
  * @author Neil
  */
 public class G13Controller implements Initializable {
-        
+    
+    // Temporary buffer objects / variables
+    @FXML    
+    private ScatterChart<?, ?> targetChart;
+    // - - - - -
     
     public String filePathOne = "";
     
@@ -47,6 +52,8 @@ public class G13Controller implements Initializable {
     @FXML
     private ScatterChart<?, ?> tab1Chart;
     @FXML
+    private ScatterChart<?, ?> tab2Chart;
+    @FXML
     private AnchorPane tabSelect;
     @FXML
     private AnchorPane tabSelect1;
@@ -54,8 +61,6 @@ public class G13Controller implements Initializable {
     private AnchorPane tabSelect11;
     @FXML
     private Button loadDataButton;
-    @FXML
-    private ScatterChart<?, ?> tab1Chart1;
     @FXML
     private NumberAxis y1;
     @FXML
@@ -114,13 +119,8 @@ public class G13Controller implements Initializable {
     @FXML
     private Label topTabLabel;
     
-    private void handleButtonAction(ActionEvent event) {
-        //System.out.println("You clicked me!");
-        label.setText("Hello World!");
-    }
-    
-    // private Text actionStatus;
-    
+
+    // Opens FileChooser window
     @FXML
     void fileButton(ActionEvent event) throws Exception {
         
@@ -131,9 +131,7 @@ public class G13Controller implements Initializable {
             topTabLabel.setText(selectedFile.getName());
             //System.out.println(selectedFile.getAbsolutePath());
             filePathOne = selectedFile.getAbsolutePath();
-        }
-        
-        
+        } 
     }
     
     
@@ -149,15 +147,14 @@ public class G13Controller implements Initializable {
     
     @FXML
     public void loadData(){
-
         try {
             loadData2();
             populateDropDownsOne();
         } catch (Exception e) {
+            System.out.println(e.toString());
             //
         }
-
-    }
+    } // End of loadData()
     
     public void loadData2() throws Exception {
         
@@ -179,7 +176,7 @@ public class G13Controller implements Initializable {
         //G13.getIntro();
         G13.getIntro(filePathOne);
         System.out.println(filePathOne);
-        tab1Chart.getData().clear();
+        targetChart.getData().clear();
         int blank = 20;
         //int length = 38; //Stave length
         int length = G13.beats.size();
@@ -291,31 +288,26 @@ public class G13Controller implements Initializable {
             }
         }
         
-        
-        
-            
-
-        
-        
-        
-        tab1Chart.getData().addAll(set0);
-        tab1Chart.getData().addAll(set1);
-        tab1Chart.getData().addAll(set2);
-        tab1Chart.getData().addAll(set3);
-        tab1Chart.getData().addAll(set4);
-        tab1Chart.getData().addAll(set5);
-        tab1Chart.getData().addAll(set6);
-        tab1Chart.getData().addAll(set7);
-        tab1Chart.getData().addAll(set8);
-        tab1Chart.getData().addAll(set9);
-        tab1Chart.getData().addAll(set10);
-        tab1Chart.getData().addAll(set11);
+        targetChart.getData().addAll(set0);
+        targetChart.getData().addAll(set1);
+        targetChart.getData().addAll(set2);
+        targetChart.getData().addAll(set3);
+        targetChart.getData().addAll(set4);
+        targetChart.getData().addAll(set5);
+        targetChart.getData().addAll(set6);
+        targetChart.getData().addAll(set7);
+        targetChart.getData().addAll(set8);
+        targetChart.getData().addAll(set9);
+        targetChart.getData().addAll(set10);
+        targetChart.getData().addAll(set11);
         //set1.getNode().getStyleClass().add("series-set1");
+        keyPercent();
         
     }
 
     @FXML
     private void loadDataTest0(ActionEvent event) {
+        targetChart = tab1Chart;
         filePathOne = TestTab.get(0);
         System.out.println(TestTab.get(0));
         System.out.println(filePathOne);
@@ -323,6 +315,7 @@ public class G13Controller implements Initializable {
 
     @FXML
     private void loadDataTest1(ActionEvent event) {
+        targetChart = tab2Chart;
         filePathOne = TestTab.get(1);
         System.out.println(TestTab.get(1));
         System.out.println(filePathOne);
@@ -330,6 +323,7 @@ public class G13Controller implements Initializable {
 
     @FXML
     private void loadDataTest2(ActionEvent event) {
+        targetChart = tab1Chart;
         filePathOne = TestTab.get(2);
         System.out.println(TestTab.get(2));
         System.out.println(filePathOne);
@@ -362,6 +356,66 @@ public class G13Controller implements Initializable {
         for (int i=0; i<12; i++){
             keyDropDown.getItems().add(KeyDropDown.getMin(i));
         }
+    }
+    
+    // Works out how many notes "hit" in each key, and populates each Label with the percentage
+    public void keyPercent(){
+        int[] totalNoteChordCount = new int[12];
+        int totalNotesInBeats = 0;
+        int[] keyHitCount = new int[12];
+        
+        Label[] keyLabels = {key0, key1, key2, key3, key4, key5, key6, key7, key8, key9, key10, key11};
+        
+        for(int i=0; i<12; i++){
+            totalNoteChordCount[i] += G13.Beats.noteCounter[i];
+            totalNoteChordCount[i] += G13.Beats.chordCounter[i];
+            totalNotesInBeats += totalNoteChordCount[i];
+        }
+        System.out.println("Note count array: " + Arrays.toString(totalNoteChordCount));
+        System.out.println("Total notes: " + Integer.toString(totalNotesInBeats));
+        
+        boolean[] keyPatternOrig = {true, false, true, false, true, true, false, true, false, true, false, true};
+        boolean[] keyPatternShifted = keyPatternOrig;
+        
+        // i loop goes through each different key
+        for (int i=0; i<12; i++){
+            // j loop goes through each boolean in that key pattern
+            for (int j=0; j<12; j++){
+                if(keyPatternShifted[j] == true){
+                    keyHitCount[i] += totalNoteChordCount[i];
+                }
+            }
+            
+            if (i==8){
+                System.out.println("Boolean array: " + Arrays.toString(keyPatternShifted));
+                //System.out.println("");
+            }
+            
+            keyPatternShifted = shiftedKeyPattern(keyPatternShifted);
+        }
+            
+        for (int i=0; i<12; i++){
+            double percentage = keyHitCount[i]/totalNotesInBeats*100;
+            int concatPercent = (int)percentage;
+            //keyLabels[i].setText(concatPercent + "%");
+            keyLabels[i].setText(Integer.toString(keyHitCount[i]));
+            System.out.println(keyHitCount[i]);
+        }
+        
+        System.out.println(totalNotesInBeats);
+        
+        
+        
+    }
+    
+    //Shift every value down one index
+    public boolean[] shiftedKeyPattern(boolean[] input){
+        boolean[] output = new boolean[12];
+        output[11] = input[0];
+        for(int i=0; i<11; i++){
+            output[i] = input[i+1];
+        }
+        return output;
     }
     
     

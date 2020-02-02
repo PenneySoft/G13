@@ -36,11 +36,11 @@ public class KeyDropDown {
         "C min",
     };
     
-    public String getMaj(int i){
+    public static String getMaj(int i){
         return majKeys[i];
     }
     
-    public String getMin(int i){
-        return majKeys[i];
+    public static String getMin(int i){
+        return minKeys[i];
     }
 }

@@ -1,19 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.image.*?>
-<?import javafx.scene.chart.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.geometry.*?>
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.ScatterChart?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="910.0" styleClass="anchorBG" stylesheets="@buttonStyleSheet.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="guitar13.G13Controller">
+<AnchorPane id="AnchorPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="910.0" styleClass="anchorBG" stylesheets="@buttonStyleSheet.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="guitar13.G13Controller">
     <children>
       <VBox prefHeight="200.0" prefWidth="910.0" stylesheets="@buttonStyleSheet.css" AnchorPane.topAnchor="25.0">
+          
+        
+          
          <children>
             <HBox id="topNav" prefHeight="134.0" prefWidth="910.0" stylesheets="@buttonStyleSheet.css">
                <children>
@@ -41,7 +53,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                                  <graphic>
-                                    <Label id="topTabLabel" style="-fx-background-color: #fefefe; -fx-background-radius: 5;" text="MySongLeadGuitar.txt" translateX="-14.0">
+                                    <Label id="topTabLabel" fx:id="topTabLabel" style="-fx-background-color: #fefefe; -fx-background-radius: 5;" text="MySongLeadGuitar.txt" translateX="-14.0">
                                        <padding>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </padding>
@@ -84,7 +96,7 @@
                         <AnchorPane AnchorPane.leftAnchor="4.0" AnchorPane.topAnchor="12.0">
                            <children>
                               <Label text="Start" textFill="WHITE" />
-                              <ChoiceBox id="keyOverride" layoutX="50.0" layoutY="-2.0" prefWidth="75.0" AnchorPane.leftAnchor="45.0" />
+                              <ChoiceBox id="keyOverride" fx:id="trackOneStart" layoutX="50.0" layoutY="-2.0" prefWidth="75.0" AnchorPane.leftAnchor="45.0" />
                            </children>
                            <padding>
                               <Insets right="8.0" />
@@ -93,7 +105,7 @@
                         <AnchorPane AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="4.0">
                            <children>
                               <Label text="Start" textFill="WHITE" />
-                              <ChoiceBox id="keyOverride" layoutX="69.0" layoutY="-2.0" prefWidth="75.0" AnchorPane.leftAnchor="45.0" />
+                              <ChoiceBox id="keyOverride" fx:id="trackTwoStart" layoutX="69.0" layoutY="-2.0" prefWidth="75.0" AnchorPane.leftAnchor="45.0" />
                            </children>
                            <padding>
                               <Insets right="4.0" />
@@ -106,7 +118,7 @@
                         <AnchorPane AnchorPane.leftAnchor="4.0" AnchorPane.topAnchor="12.0">
                            <children>
                               <Label text="End" textFill="WHITE" />
-                              <ChoiceBox id="keyOverride" layoutX="50.0" layoutY="-2.0" prefWidth="75.0" AnchorPane.leftAnchor="35.0" />
+                              <ChoiceBox id="keyOverride" fx:id="trackOneEnd" layoutX="50.0" layoutY="-2.0" prefWidth="75.0" AnchorPane.leftAnchor="35.0" />
                            </children>
                            <padding>
                               <Insets right="8.0" />
@@ -115,7 +127,7 @@
                         <AnchorPane AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="4.0">
                            <children>
                               <Label text="End" textFill="WHITE" />
-                              <ChoiceBox id="keyOverride" layoutX="69.0" layoutY="-2.0" prefWidth="75.0" AnchorPane.leftAnchor="35.0" />
+                              <ChoiceBox id="keyOverride" fx:id="trackTwoEnd" layoutX="69.0" layoutY="-2.0" prefWidth="75.0" AnchorPane.leftAnchor="35.0" />
                            </children>
                            <padding>
                               <Insets right="4.0" />
@@ -134,7 +146,7 @@
                         <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                      </padding>
                      <children>
-                        <ImageView fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="7.0">
+                        <ImageView fx:id="circleOfFifths" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="7.0">
                            <image>
                               <Image url="@../Resources/C.png" />
                            </image>
@@ -143,12 +155,35 @@
                   </AnchorPane>
                   <AnchorPane>
                      <children>
-                        <Button fx:id="loadDataButton" layoutY="22.0" mnemonicParsing="false" onAction="#loadData" styleClass="lion" stylesheets="@buttonStyleSheet.css" text="Load" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="6.0" />
+                        <VBox>
+                           <children>
+                              <Button fx:id="loadDataButton" mnemonicParsing="false" onAction="#loadData" prefHeight="10.0" styleClass="lion" stylesheets="@buttonStyleSheet.css" text="Load">
+                                 <VBox.margin>
+                                    <Insets bottom="-3.0" />
+                                 </VBox.margin>
+                              </Button>
+                              <Button fx:id="testButton0" mnemonicParsing="false" onAction="#loadDataTest0" prefHeight="10.0" styleClass="lion" stylesheets="@buttonStyleSheet.css" text="Test 0">
+                                 <VBox.margin>
+                                    <Insets bottom="-3.0" />
+                                 </VBox.margin>
+                              </Button>
+                              <Button fx:id="testButton1" mnemonicParsing="false" onAction="#loadDataTest1" prefHeight="10.0" styleClass="lion" stylesheets="@buttonStyleSheet.css" text="Test 1">
+                                 <VBox.margin>
+                                    <Insets bottom="-3.0" />
+                                 </VBox.margin>
+                              </Button>
+                              <Button fx:id="testButton2" mnemonicParsing="false" onAction="#loadDataTest2" prefHeight="10.0" styleClass="lion" stylesheets="@buttonStyleSheet.css" text="Test 2">
+                                 <VBox.margin>
+                                    <Insets bottom="-3.0" />
+                                 </VBox.margin>
+                              </Button>
+                           </children>
+                        </VBox>
                      </children>
                   </AnchorPane>
-                  <AnchorPane layoutX="40.0">
+                  <AnchorPane>
                      <children>
-                        <Button layoutX="40.0" layoutY="4.0" mnemonicParsing="false" style="-fx-background-color: #844;" text="X">
+                        <Button mnemonicParsing="false" onAction="#fileButton" style="-fx-background-color: #844;" text="open" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <font>
                               <Font name="System Bold" size="10.0" />
                            </font>
@@ -221,19 +256,19 @@
                         <Label alignment="CENTER" text="A#" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="10" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                         <Label alignment="CENTER" text="B" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="11" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                         <Label alignment="CENTER" text="C" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="12" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-                        <Label id="key0" alignment="CENTER" text="0%" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                        <Label id="key1" alignment="CENTER" text="0%" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                        <Label id="key2" alignment="CENTER" text="0%" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                        <Label id="key3" alignment="CENTER" text="0%" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                        <Label id="key4" alignment="CENTER" text="0%" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                        <Label id="key5" alignment="CENTER" text="0%" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                        <Label id="key6" alignment="CENTER" text="0%" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                        <Label id="key7" alignment="CENTER" text="0%" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="8" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                        <Label id="key8" alignment="CENTER" text="0%" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="9" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                        <Label id="key9" alignment="CENTER" text="0%" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="10" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                        <Label id="key10" alignment="CENTER" text="0%" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="11" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                        <Label id="key11" alignment="CENTER" text="0%" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="12" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                        <ChoiceBox id="keyOverride" prefWidth="150.0" GridPane.rowIndex="1">
+                        <Label id="key0" fx:id="key0" alignment="CENTER" text="0%" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                        <Label id="key1" fx:id="key1" alignment="CENTER" text="0%" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                        <Label id="key2" fx:id="key2" alignment="CENTER" text="0%" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                        <Label id="key3" fx:id="key3" alignment="CENTER" text="0%" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                        <Label id="key4" fx:id="key4" alignment="CENTER" text="0%" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                        <Label id="key5" fx:id="key5" alignment="CENTER" text="0%" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                        <Label id="key6" fx:id="key6" alignment="CENTER" text="0%" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                        <Label id="key7" fx:id="key7" alignment="CENTER" text="0%" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="8" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                        <Label id="key8" fx:id="key8" alignment="CENTER" text="0%" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="9" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                        <Label id="key9" fx:id="key9" alignment="CENTER" text="0%" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="10" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                        <Label id="key10" fx:id="key10" alignment="CENTER" text="0%" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="11" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                        <Label id="key11" fx:id="key11" alignment="CENTER" text="0%" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="12" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                        <ChoiceBox id="keyOverride" fx:id="keyDropDown" prefWidth="150.0" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                            </GridPane.margin>
@@ -262,7 +297,7 @@
             </AnchorPane>
             <AnchorPane layoutY="200.0" prefHeight="160.0" prefWidth="860.0" styleClass="tabGraph">
                <children>
-                  <ScatterChart fx:id="tab1Chart1" layoutX="-4.0" layoutY="-1.0" prefHeight="150.0" prefWidth="894.0" stylesheets="@Chart.css" AnchorPane.bottomAnchor="0.0">
+                  <ScatterChart fx:id="tab2Chart" layoutX="-4.0" layoutY="-1.0" prefHeight="150.0" prefWidth="894.0" stylesheets="@Chart.css" AnchorPane.bottomAnchor="0.0">
                      <xAxis>
                         <CategoryAxis side="BOTTOM" fx:id="x1" />
                      </xAxis>
@@ -277,7 +312,7 @@
             </AnchorPane>
          </children>
       </VBox>
-      <MenuBar AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <MenuBar fx:id="menuBar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>

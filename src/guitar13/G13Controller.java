@@ -25,6 +25,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javax.swing.JFileChooser;
@@ -363,7 +364,6 @@ public class G13Controller implements Initializable {
         int[] totalNoteChordCount = new int[12];
         int totalNotesInBeats = 0;
         int[] keyHitCount = new int[12];
-        
         Label[] keyLabels = {key0, key1, key2, key3, key4, key5, key6, key7, key8, key9, key10, key11};
         
         for(int i=0; i<12; i++){
@@ -374,43 +374,40 @@ public class G13Controller implements Initializable {
         System.out.println("Note count array: " + Arrays.toString(totalNoteChordCount));
         System.out.println("Total notes: " + Integer.toString(totalNotesInBeats));
         
-        boolean[] keyPatternOrig = {true, false, true, false, true, true, false, true, false, true, false, true};
-        boolean[] keyPatternShifted = keyPatternOrig;
+        int[] shiftedNotes = totalNoteChordCount;
+        boolean[] keyPattern = {true, false, true, false, true, true, false, true, false, true, false, true};
         
         // i loop goes through each different key
         for (int i=0; i<12; i++){
             // j loop goes through each boolean in that key pattern
             for (int j=0; j<12; j++){
-                if(keyPatternShifted[j] == true){
-                    keyHitCount[i] += totalNoteChordCount[i];
+                if(keyPattern[j] == true){
+                    keyHitCount[i] += shiftedNotes[j];
                 }
-            }
-            
-            if (i==8){
-                System.out.println("Boolean array: " + Arrays.toString(keyPatternShifted));
-                //System.out.println("");
-            }
-            
-            keyPatternShifted = shiftedKeyPattern(keyPatternShifted);
+            }            
+            shiftedNotes = shiftedHitCount(shiftedNotes);
         }
-            
-        for (int i=0; i<12; i++){
-            double percentage = keyHitCount[i]/totalNotesInBeats*100;
+                
+        for (int k=0; k<12; k++){
+            double percentage = (keyHitCount[k]*100)/totalNotesInBeats;
             int concatPercent = (int)percentage;
-            //keyLabels[i].setText(concatPercent + "%");
-            keyLabels[i].setText(Integer.toString(keyHitCount[i]));
-            System.out.println(keyHitCount[i]);
+            keyLabels[k].setText(concatPercent + " %");
+            if (percentage > 80){
+                keyLabels[k].setTextFill(Color.web("#e36700"));
+                keyLabels[k].setStyle("-fx-font-weight: bold");
+            } else if (percentage > 50) {
+                keyLabels[k].setTextFill(Color.web("#6493bc"));
+                keyLabels[k].setStyle("-fx-font-weight: regular");
+            } else {
+                keyLabels[k].setTextFill(Color.web("#44739c"));
+                keyLabels[k].setStyle("-fx-font-weight: regular");
+            }
         }
-        
-        System.out.println(totalNotesInBeats);
-        
-        
-        
     }
     
     //Shift every value down one index
-    public boolean[] shiftedKeyPattern(boolean[] input){
-        boolean[] output = new boolean[12];
+    public int[] shiftedHitCount(int[] input){
+        int[] output = new int[12];
         output[11] = input[0];
         for(int i=0; i<11; i++){
             output[i] = input[i+1];

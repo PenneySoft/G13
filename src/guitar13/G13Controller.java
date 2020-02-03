@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.stream.Stream;
+import javafx.beans.value.*;
+import javafx.event.EventHandler; 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -38,11 +40,23 @@ import javax.swing.JFileChooser;
 public class G13Controller implements Initializable {
     
     // Temporary buffer objects / variables
-    @FXML    
     private ScatterChart<?, ?> targetChart;
+    
+    byte keyAsByte = 0;
+    
+    byte currentTrack = 0;
+    
+    ChoiceBox[] startCBs = new ChoiceBox[2];
+    ChoiceBox[] endCBs = new ChoiceBox[2];
+    
+    int startMemory;
+    int endMemory;
+    
+    String clickedButtonName = "";
+    
     // - - - - -
     
-    public String filePathOne = "";
+    public String[] filePath = new String[2];
     
     @FXML
     private CategoryAxis x;
@@ -110,12 +124,17 @@ public class G13Controller implements Initializable {
     private Label key11;
     @FXML
     private ChoiceBox<String> keyDropDown;
+    @FXML
+    private Button topTabButton;
+    @FXML
+    private Button bottomTabButton;
+    @FXML
+    private Label bottomTabLabel;
     
     void e36700(ActionEvent event) {
         //
     }
-    
-    private Label label;
+
     
     @FXML
     private Label topTabLabel;
@@ -131,7 +150,7 @@ public class G13Controller implements Initializable {
         if (selectedFile != null) {
             topTabLabel.setText(selectedFile.getName());
             //System.out.println(selectedFile.getAbsolutePath());
-            filePathOne = selectedFile.getAbsolutePath();
+            filePath[currentTrack] = selectedFile.getAbsolutePath();
         } 
     }
     
@@ -142,6 +161,38 @@ public class G13Controller implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         populateKeyDropDown();
+        startCBs[0] = trackOneStart;
+        startCBs[1] = trackTwoStart;
+        endCBs[0] = trackOneEnd;
+        endCBs[1] = trackTwoEnd;
+        
+        // getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>()
+        
+        for (ChoiceBox box : startCBs){
+            box.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+                @Override
+                public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
+                    startMemory = t1.intValue();
+                    clickedButtonName = "startEnd";
+                    loadData();
+                    //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+            });
+        }
+        
+        for (ChoiceBox box : endCBs){
+            box.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+                @Override
+                public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
+                    endMemory = t1.intValue();
+                    clickedButtonName = "startEnd";
+                    loadData();
+                    //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+            });
+        }
+        
+
     } // end of init
     
     
@@ -150,7 +201,6 @@ public class G13Controller implements Initializable {
     public void loadData(){
         try {
             loadData2();
-            populateDropDownsOne();
         } catch (Exception e) {
             System.out.println(e.toString());
             //
@@ -158,6 +208,8 @@ public class G13Controller implements Initializable {
     } // End of loadData()
     
     public void loadData2() throws Exception {
+        
+        
         
         G13.Beats.barStarts.clear();
         
@@ -175,17 +227,48 @@ public class G13Controller implements Initializable {
         XYChart.Series set11 = new XYChart.Series<>();
         
         //G13.getIntro();
-        G13.getIntro(filePathOne);
-        System.out.println(filePathOne);
+        G13.getIntro(filePath[currentTrack]);
+        if ("fileOpen".equals(clickedButtonName)){
+            populateDropDownsOne();
+        }
+        System.out.println(filePath[currentTrack]);
         targetChart.getData().clear();
         int blank = 20;
         //int length = 38; //Stave length
         int length = G13.beats.size();
         int counter = 0;
         
+        // When to start the graph from
+        String bufferString = startCBs[currentTrack].getValue().toString();
+        int start = Integer.parseInt(bufferString);
+        if (start == 1){
+            start = 0;
+        } else {
+            start = G13.Beats.barStarts.get(start-1);
+        }
+        if ("startEnd".equals(clickedButtonName)){
+            start = startMemory;
+        }
+        startMemory = start;
+        
+        // When to end the graph.
+        int indexOfSelected = endCBs[currentTrack].getSelectionModel().getSelectedIndex();
+        bufferString = endCBs[currentTrack].getValue().toString();
+        int end = Integer.parseInt(bufferString);
+        int indexOfLargest = endCBs[currentTrack].getItems().size();
+        if (indexOfSelected == indexOfLargest){
+            end = G13.beats.size();
+        } else {
+            end = G13.Beats.barStarts.get(end-1);
+        }
+        if ("startEnd".equals(clickedButtonName)){
+            end = endMemory;
+        }
+        endMemory = end;
+        
         int buffer;
         
-        for (int i=0; i<length; i++){
+        for (int i=start; i<end; i++){
             buffer = G13.beats.get(i).getNote();
             buffer %= 12;
             if ( G13.beats.get(i).isNote() && buffer == 0 ) {
@@ -200,7 +283,7 @@ public class G13Controller implements Initializable {
         
         
         counter++;
-        for (int i=0; i<length; i++){
+        for (int i=start; i<end; i++){
             buffer = G13.beats.get(i).getNote();
             buffer %= 12;
             if (G13.beats.get(i).isNote() && G13.beats.get(i).getNote() == 2){
@@ -213,7 +296,7 @@ public class G13Controller implements Initializable {
         }
         
         counter++;
-        for (int i=0; i<length; i++){
+        for (int i=start; i<end; i++){
             buffer = G13.beats.get(i).getNote();
             buffer %= 12;
             if (G13.beats.get(i).isNote() && G13.beats.get(i).getNote() == 3){
@@ -226,7 +309,7 @@ public class G13Controller implements Initializable {
         }
         
         counter++;
-        for (int i=0; i<length; i++){
+        for (int i=start; i<end; i++){
             buffer = G13.beats.get(i).getNote();
             buffer %= 12;
             if (G13.beats.get(i).isNote() && G13.beats.get(i).getNote() == 5){
@@ -238,7 +321,7 @@ public class G13Controller implements Initializable {
         }
         
         counter++;
-        for (int i=0; i<length; i++){
+        for (int i=start; i<end; i++){
             buffer = G13.beats.get(i).getNote();
             buffer %= 12;
             if (G13.beats.get(i).isNote() && G13.beats.get(i).getNote() == 7){
@@ -250,7 +333,7 @@ public class G13Controller implements Initializable {
         }
         
         counter++;
-        for (int i=0; i<length; i++){
+        for (int i=start; i<end; i++){
             buffer = G13.beats.get(i).getNote();
             buffer %= 12;
             if (G13.beats.get(i).isNote() && G13.beats.get(i).getNote() == 8){
@@ -262,7 +345,7 @@ public class G13Controller implements Initializable {
         }
         
         counter++;
-        for (int i=0; i<length; i++){
+        for (int i=start; i<end; i++){
             buffer = G13.beats.get(i).getNote();
             buffer %= 12;
             if (G13.beats.get(i).isNote() && G13.beats.get(i).getNote() == 10){
@@ -274,7 +357,7 @@ public class G13Controller implements Initializable {
         }
         
         counter++;
-        for (int i=0; i<length; i++){
+        for (int i=start; i<end; i++){
             buffer = G13.beats.get(i).getNote();
             buffer %= 12;
             if (G13.beats.get(i).isNote() &&
@@ -308,54 +391,60 @@ public class G13Controller implements Initializable {
 
     @FXML
     private void loadDataTest0(ActionEvent event) {
+        currentTrack = 0;
         targetChart = tab1Chart;
-        filePathOne = TestTab.get(0);
+        filePath[currentTrack] = TestTab.get(0);
         System.out.println(TestTab.get(0));
-        System.out.println(filePathOne);
     }
 
     @FXML
     private void loadDataTest1(ActionEvent event) {
+        currentTrack = 1;
         targetChart = tab2Chart;
-        filePathOne = TestTab.get(1);
+        filePath[currentTrack] = TestTab.get(1);
         System.out.println(TestTab.get(1));
-        System.out.println(filePathOne);
     }
 
     @FXML
     private void loadDataTest2(ActionEvent event) {
+        currentTrack = 0;
         targetChart = tab1Chart;
-        filePathOne = TestTab.get(2);
+        filePath[currentTrack] = TestTab.get(2);
         System.out.println(TestTab.get(2));
-        System.out.println(filePathOne);
     }
     
     
     public void populateDropDownsOne(){
         
-        trackOneStart.getItems().clear();
-        trackOneEnd.getItems().clear();
+        ChoiceBox<String> bufferStart;
+        ChoiceBox<String> bufferEnd;
+        
+        if (currentTrack == 0){
+            bufferStart = trackOneStart;
+            bufferEnd = trackOneEnd;
+        } else {
+            bufferStart = trackTwoStart;
+            bufferEnd = trackTwoEnd;
+        }
+        
+        bufferStart.getItems().clear();
+        bufferEnd.getItems().clear();
         
         String barCount = Integer.toString(G13.Beats.barStarts.size());
         
         for (int i=0; i<G13.Beats.barStarts.size(); i++){
             String item = Integer.toString(i+1);
-            trackOneStart.getItems().add(item);
-            trackOneEnd.getItems().add(item);
+            bufferStart.getItems().add(item);
+            bufferEnd.getItems().add(item);
         }
         
-        trackOneStart.setValue("1");
-        trackOneEnd.setValue(barCount);
-        //trackTwoStart;
-        //trackTwoEnd;
+        bufferStart.setValue("1");
+        bufferEnd.setValue(barCount);
     }
     
     public void populateKeyDropDown(){        
-        for (int i=0; i<12; i++){
-            keyDropDown.getItems().add(KeyDropDown.getMaj(i));
-        }
-        for (int i=0; i<12; i++){
-            keyDropDown.getItems().add(KeyDropDown.getMin(i));
+        for (int i=0; i<24; i++){
+            keyDropDown.getItems().add(KeyDropDown.getKeys(i));
         }
     }
     
@@ -387,20 +476,18 @@ public class G13Controller implements Initializable {
             }            
             shiftedNotes = shiftedHitCount(shiftedNotes);
         }
-                
+        
         for (int k=0; k<12; k++){
             double percentage = (keyHitCount[k]*100)/totalNotesInBeats;
             int concatPercent = (int)percentage;
             keyLabels[k].setText(concatPercent + " %");
+            keyLabels[k].setStyle("<font-weight>: regular");
+            keyLabels[k].setTextFill(Color.web("#44739c"));
             if (percentage > 80){
                 keyLabels[k].setTextFill(Color.web("#e36700"));
                 keyLabels[k].setStyle("-fx-font-weight: bold");
             } else if (percentage > 50) {
                 keyLabels[k].setTextFill(Color.web("#6493bc"));
-                keyLabels[k].setStyle("-fx-font-weight: regular");
-            } else {
-                keyLabels[k].setTextFill(Color.web("#44739c"));
-                keyLabels[k].setStyle("-fx-font-weight: regular");
             }
         }
     }
@@ -414,7 +501,45 @@ public class G13Controller implements Initializable {
         }
         return output;
     }
+
+    @FXML
+    private void topFileChooser(ActionEvent event) {
+        currentTrack = 0;
+        targetChart = tab1Chart;
+        fileChooserMaster();
+    }
+
+    @FXML
+    private void bottomFileChooser(ActionEvent event) {
+        currentTrack = 1;
+        targetChart = tab2Chart;
+        fileChooserMaster();
+    }
     
+    private void fileChooserMaster(){
+        clickedButtonName = "fileOpen";
+        FileChooser fileChooser = new FileChooser();
+        File selectedFile = fileChooser.showOpenDialog(null);
+        Label label;
+        
+        if (currentTrack == 0){
+            label = topTabLabel;
+        } else {
+            label = bottomTabLabel;
+        }
+
+        if (selectedFile != null) {
+            label.setText(selectedFile.getName());
+            //System.out.println(selectedFile.getAbsolutePath());
+            filePath[currentTrack] = selectedFile.getAbsolutePath();
+        }
+        
+        loadData();
+    }
+    
+    // Listeners - - - - - -
+    
+
     
 } // end of controller
 

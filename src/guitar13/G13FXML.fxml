@@ -48,7 +48,7 @@
                      <children>
                         <VBox prefHeight="88.0" prefWidth="249.0" stylesheets="@buttonStyleSheet.css">
                            <children>
-                              <Button mnemonicParsing="false" prefHeight="33.0" prefWidth="230.0" styleClass="glass-grey" stylesheets="@buttonStyleSheet.css" text="Top Tab">
+                              <Button fx:id="topTabButton" mnemonicParsing="false" onAction="#topFileChooser" prefHeight="33.0" prefWidth="230.0" styleClass="glass-grey" stylesheets="@buttonStyleSheet.css" text="Top Tab">
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
@@ -60,12 +60,12 @@
                                     </Label>
                                  </graphic>
                               </Button>
-                              <Button id="glass-grey" mnemonicParsing="false" prefHeight="33.0" prefWidth="230.0" styleClass="glass-grey" stylesheets="@buttonStyleSheet.css" text="Bottom Tab">
+                              <Button id="glass-grey" fx:id="bottomTabButton" mnemonicParsing="false" onAction="#bottomFileChooser" prefHeight="33.0" prefWidth="230.0" styleClass="glass-grey" stylesheets="@buttonStyleSheet.css" text="Bottom Tab">
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                                  <graphic>
-                                    <Label id="bottomTabLabel" style="-fx-background-color: #fefefe; -fx-background-radius: 5;" text="MySongBass.txt" translateX="-20.0">
+                                    <Label id="bottomTabLabel" fx:id="bottomTabLabel" style="-fx-background-color: #fefefe; -fx-background-radius: 5;" text="MySongBass.txt" translateX="-20.0">
                                        <padding>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </padding>
@@ -231,14 +231,14 @@
                         <Label alignment="CENTER" contentDisplay="CENTER" text="F" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
                         <Label alignment="CENTER" contentDisplay="CENTER" text="F#" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="3" GridPane.halignment="CENTER" />
                         <Label alignment="CENTER" text="G" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="4" GridPane.halignment="CENTER" />
-                        <Label alignment="CENTER" text="G#" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="5" GridPane.halignment="CENTER" />
+                        <Label alignment="CENTER" text="Ab" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="5" GridPane.halignment="CENTER" />
                         <Label alignment="CENTER" text="A" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="6" GridPane.halignment="CENTER" />
-                        <Label alignment="CENTER" text="A#" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="7" GridPane.halignment="CENTER" />
+                        <Label alignment="CENTER" text="Bb" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="7" GridPane.halignment="CENTER" />
                         <Label alignment="CENTER" text="B" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="8" GridPane.halignment="CENTER" />
                         <Label alignment="CENTER" text="C" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="9" GridPane.halignment="CENTER" />
-                        <Label alignment="CENTER" text="C#" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="10" GridPane.halignment="CENTER" />
+                        <Label alignment="CENTER" text="Db" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="10" GridPane.halignment="CENTER" />
                         <Label alignment="CENTER" text="D" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="11" GridPane.halignment="CENTER" />
-                        <Label alignment="CENTER" text="D#" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="12" GridPane.halignment="CENTER" />
+                        <Label alignment="CENTER" text="Eb" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="12" GridPane.halignment="CENTER" />
                         <Label alignment="CENTER" contentDisplay="CENTER" styleClass="orange" text="Minor" textAlignment="CENTER" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="2">
                            <font>
                               <Font name="System Bold" size="12.0" />
@@ -246,14 +246,14 @@
                         </Label>
                         <Label alignment="CENTER" text="C#" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                         <Label alignment="CENTER" text="D" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-                        <Label alignment="CENTER" text="D#" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                        <Label alignment="CENTER" text="Eb" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                         <Label alignment="CENTER" text="E" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                         <Label alignment="CENTER" text="F" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                         <Label alignment="CENTER" text="F#" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                         <Label alignment="CENTER" text="G" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                         <Label alignment="CENTER" text="G#" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="8" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                         <Label alignment="CENTER" text="A" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="9" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-                        <Label alignment="CENTER" text="A#" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="10" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                        <Label alignment="CENTER" text="Bb" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="10" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                         <Label alignment="CENTER" text="B" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="11" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                         <Label alignment="CENTER" text="C" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="12" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                         <Label id="key0" fx:id="key0" alignment="CENTER" text="0%" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />

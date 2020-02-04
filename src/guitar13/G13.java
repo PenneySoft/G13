@@ -44,24 +44,22 @@ public class G13 extends Application {
     } // end of main
     
     
-    public static int[] testMethod(){
-        int[] i = {100, 50};
-        return i;
-    }
-    
-    public static ArrayList<Beats> beats;
 
     
-    public static void getIntro() throws Exception { 
+    public static ArrayList<Beats> beats;
+    public static ArrayList<Beats2> beats2;
+
+    
+    public static void getIntro(String filePathAbs) throws Exception { 
 
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         // File and variable setup
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
+        
         // Transfer .txt tab file to String
-        String filePath = Paths.get(".").toAbsolutePath().normalize().toString();
-        filePath += "\\src\\guitar13\\tabs\\intro.txt";
-        File fileTab = new File(filePath);
+        
+        
+        File fileTab = new File(filePathAbs);
         BufferedReader br = new BufferedReader(new FileReader(fileTab)); 
         String strTab;
         // Every line, including junk to parse out
@@ -134,8 +132,6 @@ public class G13 extends Application {
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 
         // When does first '-' or note occur in current line? e.g. "Db|--7--" would be #3 on the dash
-        //int beatStartsAt;
-        //int beatCounter = 0;
 
         // Keep track of when the finished beats end, and the new blank beats will have begun so we can populate them only
         int beatsObjectALLength = 0;
@@ -159,21 +155,17 @@ public class G13 extends Application {
                         
                     }
                 }
-                //System.out.println(beatsObjectALLength);
+                ////System.out.println(beatsObjectALLength);
 
                 // We now have some fresh blank beats added to the end of the current Beat AL, now to populate those beats with notes
                 // Starting from the last breakpoint in Beats.barStarts and finishing at the end of its size
 
                 // Loop through the [e|- string] for example and pick out valid notes, watch out for concatenated values
                 for (int k=0; k<barsALAL.get(i).get(j).length(); k++){
-
-
                     // Current char at potential beat, is it an integer?
                     if (Character.isDigit(barsALAL.get(i).get(j).charAt(k))){
-
                         // Note in int form to pass to Beats.makeBeat builder
                         int noteAsInt = Character.getNumericValue(barsALAL.get(i).get(j).charAt(k));
-
                         // Check if we need to concatenate adjacent character e.g. [ e|--14-- ]
                         if (Character.isDigit(barsALAL.get(i).get(j).charAt(k+1))){
                             int concatNote = Character.getNumericValue(barsALAL.get(i).get(j).charAt(k));
@@ -181,15 +173,12 @@ public class G13 extends Application {
                             concatNote *= 10;
                             // Add the [4] from [14]
                             concatNote += Character.getNumericValue(barsALAL.get(i).get(j).charAt(k+1));
-
                             // Remove the [4] from [14] ... changes it to: [1-]
                             char[] modifyString = barsALAL.get(i).get(j).toCharArray();
                             modifyString[k+1] = '-';
                             barsALAL.get(i).set(j, String.valueOf(modifyString));
-
                             // Update int note
                             noteAsInt = concatNote;
-                            
                         } // End of IF concatenate 
 
                         // Use this as index in makeBeat
@@ -197,34 +186,15 @@ public class G13 extends Application {
                         indexForMakeBeat += k;
                         
                         beats.get(indexForMakeBeat).makeBeat(5-j, noteAsInt);
-
-
-
-
-
                     } // end of IF chat is digit
-
-
-                    
-
-
-
                 } // End of FOR k
-                
-
             } // End of FOR j
-
-            
-        
         } // End of FOR i
-
 
         for (int i=0; i<beats.size(); i++) {
             beats.get(i).printBeat();
             beats.get(i).processAll();
         }
-
-
 
         // Counter
         // 0 1  2 3 4  5 6  7 8 9 10 11
@@ -233,31 +203,24 @@ public class G13 extends Application {
         int[] chordCounter = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
         for (int i = 0; i < beats.size(); i++) {
-
             if (beats.get(i).isNote()){
                 noteCounter[beats.get(i).getNote()]++;
             }
-
             if (beats.get(i).isChord()){
                 chordCounter[beats.get(i).getNote()]++;
             }
-        
-            
         } // End of FOR adding up notes
         
         for (int i = 0; i<12; i++){
             Beats.calcTotalNotes(i, noteCounter[i]);
             Beats.calcTotalChords(i, chordCounter[i]);
         }
-        
+        ////System.out.println("\n" + Arrays.toString(noteCounter));
+        ////System.out.println(Arrays.toString(chordCounter));   
+    } // End of getIntro
 
-        System.out.println("\n" + Arrays.toString(noteCounter));
-        //System.out.println(Arrays.toString(chordCounter));
-        
-
-        
-    } // End of main
-
+    
+    
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // Custom methods
@@ -271,6 +234,7 @@ public class G13 extends Application {
         int dashCounter =0;
         int dashThreshold = 3;
 
+        
         // All lines must be same length to be valid
         if (lineLength != firstLineLength){
             return false;
@@ -298,12 +262,16 @@ public class G13 extends Application {
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // Custom classes
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-    static class Beats {
-
-        static ArrayList<Integer> barStarts = new ArrayList<Integer>();
-        static int[] noteCounter = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        static int[] chordCounter = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+  
+    public class Beats2 extends Beats {
+    }
+    
+    public static class Beats {
+        
+        public static ArrayList<Integer> barStarts = new ArrayList<Integer>();
+        
+        public static int[] noteCounter = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        public static int[] chordCounter = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
         // Each note on each string
         private Integer[] rawNotes = {null, null, null, null, null, null};
@@ -322,22 +290,18 @@ public class G13 extends Application {
         public int transposedNote(int shift){
             int transposed = lowStringEquiv + shift;
             transposed %= 12;
-            
             return transposed;
         }
 
         public void printBeat(){
-            System.out.println(Arrays.toString(rawNotes));
+            //System.out.println(Arrays.toString(rawNotes));
         }
-
         // - - - -
 
         // Updates rawNotes. Read: "Change POS to VAL"
         public void makeBeat(int pos, int val){
             rawNotes[pos] = val;
         }
-
-
         // - - - -
 
         public Boolean isNote(){
@@ -347,13 +311,10 @@ public class G13 extends Application {
         public Boolean isChord() {
             return hasChord;
         }
-
         // - - - -
-
         public int getNote(){
             return lowStringEquiv;
         }
-
         // - - - -
 
         public void processAll(){
@@ -375,10 +336,8 @@ public class G13 extends Application {
         // Checks if there are multiple notes (chord) in this beat
         public void analyse(){
             int noteCount = 0;
-
             // We have a chord?
             for (int i=0; i<rawNotes.length; i++){
-
                 if (rawNotes[i] != null){
                     noteCount++;
                     // Store location of first note
@@ -386,40 +345,32 @@ public class G13 extends Application {
                         locationOfNote = i;
                     }
                 }
-
                 // Chord triggers this
                 if (noteCount > 1){
                     hasChord = true;
                     break;
                 }
             } // End of FOR
-       
             // Chord and/or note present, save root note as if it were on E|- string
             if (noteCount > 0){
                 lowStringEquiv = (int)rawNotes[locationOfNote] + stringIntervals[locationOfNote];
             }
-
             // We have just a note?
             if (noteCount == 1){
                 hasNote = true;
             }
-            
         } // End of analyse
-
 
         // - - - -
 
         // Takes raw tab beat and gives them all their LowE equivalent, but still in an array!
         public Integer[] adjustAllStrings(){
             Integer[] adjusted = {null, null, null, null, null, null};
-
             for (int i=0; i<adjusted.length; i++){
-
                 if (rawNotes[i] != null){
                     adjusted[i] = rawNotes[i] + stringIntervals[i];
                 }
             } // End of FOR
-
             return adjusted;
         } // End of adjustAllStrings
 
@@ -437,17 +388,13 @@ public class G13 extends Application {
                         lowestBuffer = notesIfAllOnE[i];
                     }
                 }
-
             } // End of FOR
 
             // Make it so the note sits in the first octave of Low E|- string
             lowestBuffer %= 12;
             return lowestBuffer;
         } // End of makeLowStringEquiv
-
         // - - - -
-
-
     } // End of Beats class
     
 

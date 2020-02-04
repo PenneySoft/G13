@@ -6,7 +6,7 @@ package guitar13;
  */
 public class KeyDropDown {
     
-    private static String[] majKeys = {
+    private static String[] Keys = {
         "E",
         "F",
         "F#",
@@ -16,17 +16,14 @@ public class KeyDropDown {
         "Bb",
         "B",
         "C",
-        "Dd",
+        "Db",
         "D",
         "Eb",
-    };
-    
-    private static String[] minKeys = {
         "C# min",
         "D min",
         "Eb min",
         "E min",
-        "Fm min",
+        "F min",
         "F# min",
         "G min",
         "G# min",
@@ -36,11 +33,7 @@ public class KeyDropDown {
         "C min",
     };
     
-    public String getMaj(int i){
-        return majKeys[i];
-    }
-    
-    public String getMin(int i){
-        return majKeys[i];
+    public static String getKeys(int i){
+        return Keys[i];
     }
 }

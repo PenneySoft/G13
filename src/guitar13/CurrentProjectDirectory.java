@@ -8,13 +8,13 @@ import java.nio.file.Paths;
  */
 public class CurrentProjectDirectory {
     
-    private String filePath = Paths.get(".").toAbsolutePath().normalize().toString() + "\\src\\";
+    private static String filePath = Paths.get(".").toAbsolutePath().normalize().toString() + "\\src\\";
     
-    public String source(){
+    public static String source(){
         return filePath;
     }
     
-    public String resources(){
+    public static String resources(){
         return filePath + "Resources\\";
     }
     

@@ -11,6 +11,7 @@ import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
@@ -19,12 +20,16 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javax.swing.JFileChooser;
 
 
@@ -75,8 +80,6 @@ public class G13Controller implements Initializable {
     @FXML
     private AnchorPane tabSelect11;
     @FXML
-    private Button loadDataButton;
-    @FXML
     private NumberAxis y1;
     @FXML
     private CategoryAxis x1;
@@ -90,12 +93,6 @@ public class G13Controller implements Initializable {
     private ChoiceBox<String> trackTwoEnd;
     @FXML
     private ImageView circleOfFifths;
-    @FXML
-    private Button testButton0;
-    @FXML
-    private Button testButton1;
-    @FXML
-    private Button testButton2;
     @FXML
     private MenuBar menuBar;
     @FXML
@@ -141,7 +138,6 @@ public class G13Controller implements Initializable {
     
 
     // Opens FileChooser window
-    @FXML
     void fileButton(ActionEvent event) throws Exception {
         
         FileChooser fileChooser = new FileChooser();
@@ -180,6 +176,14 @@ public class G13Controller implements Initializable {
                     if (currentTrack != 10) {
                         loadData();
                     }
+                    
+                    
+                    String key = KeyDropDown.getKeys(keyDropDown.getSelectionModel().getSelectedIndex());
+                    File file = new File(CurrentProjectDirectory.resources() + key + ".png");
+                    Image image;
+                    image = new Image(file.toURI().toString());
+                    circleOfFifths.setImage(image);
+                    
                     //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
                 }
             });
@@ -233,7 +237,6 @@ public class G13Controller implements Initializable {
     
     
     
-    @FXML
     public void loadData(){
         try {
             loadData2();
@@ -445,7 +448,6 @@ public class G13Controller implements Initializable {
         clickedButtonName = "";
     }
 
-    @FXML
     private void loadDataTest0(ActionEvent event) {
         clickedButtonName = ButtonNames.fileOpen;
         currentTrack = 0;
@@ -454,7 +456,6 @@ public class G13Controller implements Initializable {
         //System.out.println(TestTab.get(0));
     }
 
-    @FXML
     private void loadDataTest1(ActionEvent event) {
         clickedButtonName = ButtonNames.fileOpen;
         currentTrack = 1;
@@ -463,7 +464,6 @@ public class G13Controller implements Initializable {
         //System.out.println(TestTab.get(1));
     }
 
-    @FXML
     private void loadDataTest2(ActionEvent event) {
         clickedButtonName = ButtonNames.fileOpen;
         currentTrack = 0;
@@ -599,7 +599,47 @@ public class G13Controller implements Initializable {
     }
     
     // Listeners - - - - - -
+
+    @FXML
+    private void openCoF(MouseEvent event) {
+        Stage window = new Stage();
+        window.setTitle("Circle of Fifths");
+        window.setMinWidth(300);
+        window.setMinHeight(300);
+        
+        Label label = new Label();
+        label.setText("I'm a label");
+        
+        //System.out.println(CurrentProjectDirectory.resources() + "D" + ".png");
+        String key = KeyDropDown.getKeys(keyDropDown.getSelectionModel().getSelectedIndex());
+        File file = new File(CurrentProjectDirectory.resources() + key + ".png");
+        Image image;
+        image = new Image(file.toURI().toString());
+        ImageView img = new ImageView();
+        img.setImage(image);
+        
+        img.minHeight(300);
+        img.minWidth(300);
+        
+        VBox layout = new VBox(10);
+        layout.getChildren().addAll(img);
+        
+        Scene scene2 = new Scene(layout);
+        
+        window.setScene(scene2);
+        window.show();
+        
+    }
     
+    /*
+    
+    <ImageView fx:id="circleOfFifths" fitHeight="80.0" fitWidth="80.0" onMouseClicked="#openCoF" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="7.0">
+                                       <image>
+                                          <Image url="@../Resources/C.png" />
+                                       </image>
+                                    </ImageView>
+    
+    */
 
     
 } // end of controller

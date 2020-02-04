@@ -54,6 +54,8 @@ public class G13Controller implements Initializable {
     
     String clickedButtonName = "";
     
+    boolean stopItNow = false;
+    
     // - - - - -
     
     public String[] filePath = new String[2];
@@ -166,15 +168,26 @@ public class G13Controller implements Initializable {
         endCBs[0] = trackOneEnd;
         endCBs[1] = trackTwoEnd;
         
-        // getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>()
-        
         for (ChoiceBox box : startCBs){
             box.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
                 @Override
                 public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
+                    if(box == startCBs[0]){
+                        currentTrack = 0;
+                    } else {
+                        currentTrack = 1;
+                    }
                     startMemory = t1.intValue();
-                    clickedButtonName = "startEnd";
-                    loadData();
+                    if (clickedButtonName.equals("")){
+                        System.out.println("Was empty, now start");
+                        clickedButtonName = ButtonNames.startEnd;
+                    }
+                    stopItNow = true;
+                    if (clickedButtonName.equals(ButtonNames.startEnd)){
+                        loadData();
+                    }
+                    stopItNow = true;
+                    
                     //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
                 }
             });
@@ -184,15 +197,26 @@ public class G13Controller implements Initializable {
             box.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
                 @Override
                 public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
+                    if(box == endCBs[0]){
+                        currentTrack = 0;
+                    } else {
+                        currentTrack = 1;
+                    }
                     endMemory = t1.intValue();
-                    clickedButtonName = "startEnd";
-                    loadData();
+                    if (clickedButtonName.equals("")){
+                        System.out.println("Was empty, now end");
+                        clickedButtonName = ButtonNames.startEnd;
+                    }
+                    stopItNow = true;
+                    if (clickedButtonName.equals(ButtonNames.startEnd)){
+                        loadData();
+                    }
+                    stopItNow = true;
+                    
                     //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
                 }
             });
         }
-        
-
     } // end of init
     
     
@@ -209,10 +233,6 @@ public class G13Controller implements Initializable {
     
     public void loadData2() throws Exception {
         
-        
-        
-        G13.Beats.barStarts.clear();
-        
         XYChart.Series set0 = new XYChart.Series<>();
         XYChart.Series set1 = new XYChart.Series<>();
         XYChart.Series set2 = new XYChart.Series<>();
@@ -227,136 +247,196 @@ public class G13Controller implements Initializable {
         XYChart.Series set11 = new XYChart.Series<>();
         
         //G13.getIntro();
-        G13.getIntro(filePath[currentTrack]);
-        if ("fileOpen".equals(clickedButtonName)){
+        if (ButtonNames.fileOpen.equals(clickedButtonName)){
+            G13.Beats.barStarts.clear();
+            G13.getIntro(filePath[currentTrack]);
             populateDropDownsOne();
+            System.out.println(" - - Populated drop downs in loadData 2. - -");
         }
-        System.out.println(filePath[currentTrack]);
+
+        
+        //System.out.println(filePath[currentTrack]);
         targetChart.getData().clear();
-        int blank = 20;
+        int blank = 20; // This is for when we don't have a note (silence) and need to pad the dataset out with blocks, but up top / off screen
         //int length = 38; //Stave length
-        int length = G13.beats.size();
-        int counter = 0;
+        //int length = G13.beats.size();
+        //int counter = 0;
+        
         
         // When to start the graph from
-        String bufferString = startCBs[currentTrack].getValue().toString();
-        int start = Integer.parseInt(bufferString);
-        if (start == 1){
-            start = 0;
+        int start = 0;
+        System.out.println("StartMemory: " + Integer.toString(startMemory));
+        if (clickedButtonName.equals(ButtonNames.fileOpen)){
+            start = G13.Beats.barStarts.get(0);
         } else {
-            start = G13.Beats.barStarts.get(start-1);
+            start = G13.Beats.barStarts.get(startMemory);
         }
-        if ("startEnd".equals(clickedButtonName)){
-            start = startMemory;
+        System.out.println("Start: " + Integer.toString(start));
+        
+        /*
+        if (startMemory == 0){
+            start = 0;
+        } else if (ButtonNames.startEnd.equals(clickedButtonName)){
+            start = G13.Beats.barStarts.get(startMemory);
+        } else {
+            boolean flag = false;
+            String bufferString = startCBs[currentTrack].getValue().toString();
+            start = Integer.parseInt(bufferString);
+            if (start == 1){
+                flag = true;
+            } else {
+                int tempInt = start-1;
+                //System.out.println("barStarts: " + Integer.toString(G13.Beats.barStarts.get(tempInt)));
+                start = G13.Beats.barStarts.get(tempInt);
+            }
+            if (flag){
+                start = 0;
+            }
         }
-        startMemory = start;
+        */
+        
+        //startMemory = start;
+        //System.out.println("Start is " + Integer.toString(start));
         
         // When to end the graph.
-        int indexOfSelected = endCBs[currentTrack].getSelectionModel().getSelectedIndex();
-        bufferString = endCBs[currentTrack].getValue().toString();
-        int end = Integer.parseInt(bufferString);
-        int indexOfLargest = endCBs[currentTrack].getItems().size();
-        if (indexOfSelected == indexOfLargest){
+        int end;
+        System.out.println("EndMemory: " + Integer.toString(endMemory));
+        int choiceBoxMax = endCBs[currentTrack].getItems().size()-1;
+        System.out.println("choiceBoxMax: " + Integer.toString(choiceBoxMax));
+        if (endMemory == choiceBoxMax || clickedButtonName.equals(ButtonNames.fileOpen)){
             end = G13.beats.size();
         } else {
-            end = G13.Beats.barStarts.get(end-1);
+            end = G13.Beats.barStarts.get(endMemory+1);
         }
-        if ("startEnd".equals(clickedButtonName)){
-            end = endMemory;
+        System.out.println("End: " + Integer.toString(end));
+        
+        
+        
+        /*
+        int end;
+        if (ButtonNames.startEnd.equals(clickedButtonName)){
+            end = G13.Beats.barStarts.get(endMemory);
+        } else {
+            int indexOfSelected = endCBs[currentTrack].getSelectionModel().getSelectedIndex();
+            System.out.println(" - - - - - - - - - - - Break point 01");
+            String bufferString = endCBs[currentTrack].getValue().toString();// problem
+            System.out.println(" - - - - - - - - - - - Break point 02");
+            end = Integer.parseInt(bufferString);
+
+            int indexOfLargest;
+            if (endCBs[currentTrack].getItems().size() > 1){
+                indexOfLargest = endCBs[currentTrack].getItems().size()-1; 
+            } else {
+                indexOfLargest = 0;
+            }
+
+            if (indexOfSelected == indexOfLargest){
+                end = G13.beats.size();
+            } else {
+                end = G13.Beats.barStarts.get(end-1);
+            }
+
+            if (ButtonNames.startEnd.equals(clickedButtonName)){
+                //end = G13.beats.size();
+            }
         }
         endMemory = end;
+        */
+        
+        //System.out.println("End is " + Integer.toString(end));
         
         int buffer;
+        System.out.println("Start/end used: " + Integer.toString(start) + " / " + Integer.toString(end));
         
         for (int i=start; i<end; i++){
             buffer = G13.beats.get(i).getNote();
             buffer %= 12;
             if ( G13.beats.get(i).isNote() && buffer == 0 ) {
-                set0.getData().add(new XYChart.Data(Integer.toString(i), buffer));
-                set0.getData().add(new XYChart.Data(Integer.toString(i), 12));
+                set0.getData().add(new XYChart.Data(Integer.toString(i-start), buffer));
+                set0.getData().add(new XYChart.Data(Integer.toString(i-start), 12));
                 //System.out.println(buffer);
             } else {
-                set0.getData().add(new XYChart.Data(Integer.toString(i), blank));
+                set0.getData().add(new XYChart.Data(Integer.toString(i-start), blank));
             }
             
         }
         
         
-        counter++;
+        //counter++;
         for (int i=start; i<end; i++){
             buffer = G13.beats.get(i).getNote();
             buffer %= 12;
             if (G13.beats.get(i).isNote() && G13.beats.get(i).getNote() == 2){
-                set1.getData().add(new XYChart.Data(Integer.toString(i), buffer));
+                set1.getData().add(new XYChart.Data(Integer.toString(i-start), buffer));
                 //System.out.println(buffer);
             } else {
-                set1.getData().add(new XYChart.Data(Integer.toString(i), blank));
+                set1.getData().add(new XYChart.Data(Integer.toString(i-start), blank));
             }
 
         }
         
-        counter++;
+        //counter++;
         for (int i=start; i<end; i++){
             buffer = G13.beats.get(i).getNote();
             buffer %= 12;
             if (G13.beats.get(i).isNote() && G13.beats.get(i).getNote() == 3){
-                set2.getData().add(new XYChart.Data(Integer.toString(i), buffer));
+                set2.getData().add(new XYChart.Data(Integer.toString(i-start), buffer));
                 //System.out.println(buffer);
             } else {
-                set2.getData().add(new XYChart.Data(Integer.toString(i), blank));
+                set2.getData().add(new XYChart.Data(Integer.toString(i-start), blank));
             }
 
         }
         
-        counter++;
+        //counter++;
         for (int i=start; i<end; i++){
             buffer = G13.beats.get(i).getNote();
             buffer %= 12;
             if (G13.beats.get(i).isNote() && G13.beats.get(i).getNote() == 5){
-                set3.getData().add(new XYChart.Data(Integer.toString(i), buffer));
+                set3.getData().add(new XYChart.Data(Integer.toString(i-start), buffer));
                 //System.out.println(buffer);
             } else {
-                set3.getData().add(new XYChart.Data(Integer.toString(i), blank));
+                set3.getData().add(new XYChart.Data(Integer.toString(i-start), blank));
             }
         }
         
-        counter++;
+        //counter++;
         for (int i=start; i<end; i++){
             buffer = G13.beats.get(i).getNote();
             buffer %= 12;
             if (G13.beats.get(i).isNote() && G13.beats.get(i).getNote() == 7){
-                set4.getData().add(new XYChart.Data(Integer.toString(i), buffer));
+                set4.getData().add(new XYChart.Data(Integer.toString(i-start), buffer));
                 //System.out.println(buffer);
             } else {
-                set4.getData().add(new XYChart.Data(Integer.toString(i), blank));
+                set4.getData().add(new XYChart.Data(Integer.toString(i-start), blank));
             }
         }
         
-        counter++;
+        //counter++;
         for (int i=start; i<end; i++){
             buffer = G13.beats.get(i).getNote();
             buffer %= 12;
             if (G13.beats.get(i).isNote() && G13.beats.get(i).getNote() == 8){
-                set5.getData().add(new XYChart.Data(Integer.toString(i), buffer));
+                set5.getData().add(new XYChart.Data(Integer.toString(i-start), buffer));
                 //System.out.println(buffer);
             } else {
-                set5.getData().add(new XYChart.Data(Integer.toString(i), blank));
+                set5.getData().add(new XYChart.Data(Integer.toString(i-start), blank));
             }
         }
         
-        counter++;
+        //counter++;
         for (int i=start; i<end; i++){
             buffer = G13.beats.get(i).getNote();
             buffer %= 12;
             if (G13.beats.get(i).isNote() && G13.beats.get(i).getNote() == 10){
-                set6.getData().add(new XYChart.Data(Integer.toString(i), buffer));
+                set6.getData().add(new XYChart.Data(Integer.toString(i-start), buffer));
                 //System.out.println(buffer);
             } else {
-                set6.getData().add(new XYChart.Data(Integer.toString(i), blank));
+                set6.getData().add(new XYChart.Data(Integer.toString(i-start), blank));
             }
         }
         
-        counter++;
+        //counter++;
         for (int i=start; i<end; i++){
             buffer = G13.beats.get(i).getNote();
             buffer %= 12;
@@ -366,9 +446,9 @@ public class G13Controller implements Initializable {
                     (buffer == 6) ||
                     (buffer == 9) ||
                     (buffer == 11) )){
-                set7.getData().add(new XYChart.Data(Integer.toString(i), buffer));
+                set7.getData().add(new XYChart.Data(Integer.toString(i-start), buffer));
             } else {
-                set7.getData().add(new XYChart.Data(Integer.toString(i), blank));
+                set7.getData().add(new XYChart.Data(Integer.toString(i-start), blank));
             }
         }
         
@@ -386,35 +466,42 @@ public class G13Controller implements Initializable {
         targetChart.getData().addAll(set11);
         //set1.getNode().getStyleClass().add("series-set1");
         keyPercent();
-        
+        String test = Arrays.toString(G13.Beats.barStarts.toArray());
+        System.out.println("Bar Starts: " + test);
+        clickedButtonName = "";
     }
 
     @FXML
     private void loadDataTest0(ActionEvent event) {
+        clickedButtonName = ButtonNames.fileOpen;
         currentTrack = 0;
         targetChart = tab1Chart;
         filePath[currentTrack] = TestTab.get(0);
-        System.out.println(TestTab.get(0));
+        //System.out.println(TestTab.get(0));
     }
 
     @FXML
     private void loadDataTest1(ActionEvent event) {
+        clickedButtonName = ButtonNames.fileOpen;
         currentTrack = 1;
         targetChart = tab2Chart;
         filePath[currentTrack] = TestTab.get(1);
-        System.out.println(TestTab.get(1));
+        //System.out.println(TestTab.get(1));
     }
 
     @FXML
     private void loadDataTest2(ActionEvent event) {
+        clickedButtonName = ButtonNames.fileOpen;
         currentTrack = 0;
         targetChart = tab1Chart;
         filePath[currentTrack] = TestTab.get(2);
-        System.out.println(TestTab.get(2));
+        //System.out.println(TestTab.get(2));
     }
     
     
     public void populateDropDownsOne(){
+        stopItNow = true;
+        System.out.println(" - - populateDropDownsOne - -");
         
         ChoiceBox<String> bufferStart;
         ChoiceBox<String> bufferEnd;
@@ -460,8 +547,8 @@ public class G13Controller implements Initializable {
             totalNoteChordCount[i] += G13.Beats.chordCounter[i];
             totalNotesInBeats += totalNoteChordCount[i];
         }
-        System.out.println("Note count array: " + Arrays.toString(totalNoteChordCount));
-        System.out.println("Total notes: " + Integer.toString(totalNotesInBeats));
+        //System.out.println("Note count array: " + Arrays.toString(totalNoteChordCount));
+        //System.out.println("Total notes: " + Integer.toString(totalNotesInBeats));
         
         int[] shiftedNotes = totalNoteChordCount;
         boolean[] keyPattern = {true, false, true, false, true, true, false, true, false, true, false, true};
@@ -517,7 +604,8 @@ public class G13Controller implements Initializable {
     }
     
     private void fileChooserMaster(){
-        clickedButtonName = "fileOpen";
+        System.out.println(" - - fileChooserMaster() - -");
+        clickedButtonName = ButtonNames.fileOpen;
         FileChooser fileChooser = new FileChooser();
         File selectedFile = fileChooser.showOpenDialog(null);
         Label label;

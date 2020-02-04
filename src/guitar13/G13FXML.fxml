@@ -41,31 +41,31 @@
                         </Label>
                      </children>
                      <HBox.margin>
-                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                        <Insets bottom="2.0" left="2.0" right="16.0" top="2.0" />
                      </HBox.margin>
                   </AnchorPane>
-                  <AnchorPane prefHeight="92.0" prefWidth="243.0" style="-fx-background-radius: 5;" styleClass="littleAnchor" stylesheets="@buttonStyleSheet.css">
+                  <AnchorPane prefHeight="92.0" prefWidth="350.0" style="-fx-background-radius: 5;" styleClass="littleAnchor" stylesheets="@buttonStyleSheet.css">
                      <children>
-                        <VBox prefHeight="88.0" prefWidth="249.0" stylesheets="@buttonStyleSheet.css">
+                        <VBox prefHeight="88.0" prefWidth="350.0" stylesheets="@buttonStyleSheet.css" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="2.0">
                            <children>
-                              <Button fx:id="topTabButton" mnemonicParsing="false" onAction="#topFileChooser" prefHeight="33.0" prefWidth="230.0" styleClass="glass-grey" stylesheets="@buttonStyleSheet.css" text="Top Tab">
+                              <Button fx:id="topTabButton" mnemonicParsing="false" onAction="#topFileChooser" prefHeight="33.0" prefWidth="350.0" styleClass="glass-grey" stylesheets="@buttonStyleSheet.css" text="Top Tab">
                                  <VBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                    <Insets bottom="8.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                                  <graphic>
-                                    <Label id="topTabLabel" fx:id="topTabLabel" style="-fx-background-color: #fefefe; -fx-background-radius: 5;" text="MySongLeadGuitar.txt" translateX="-14.0">
+                                    <Label id="topTabLabel" fx:id="topTabLabel" prefWidth="250.0" style="-fx-background-color: #fefefe; -fx-background-radius: 5;" text="MySongLeadGuitar.txt">
                                        <padding>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </padding>
                                     </Label>
                                  </graphic>
                               </Button>
-                              <Button id="glass-grey" fx:id="bottomTabButton" mnemonicParsing="false" onAction="#bottomFileChooser" prefHeight="33.0" prefWidth="230.0" styleClass="glass-grey" stylesheets="@buttonStyleSheet.css" text="Bottom Tab">
+                              <Button id="glass-grey" fx:id="bottomTabButton" mnemonicParsing="false" onAction="#bottomFileChooser" prefHeight="33.0" prefWidth="350.0" styleClass="glass-grey" stylesheets="@buttonStyleSheet.css" text="Bottom Tab">
                                  <VBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                    <Insets bottom="2.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                                  <graphic>
-                                    <Label id="bottomTabLabel" fx:id="bottomTabLabel" style="-fx-background-color: #fefefe; -fx-background-radius: 5;" text="MySongBass.txt" translateX="-20.0">
+                                    <Label id="bottomTabLabel" fx:id="bottomTabLabel" prefWidth="230.0" style="-fx-background-color: #fefefe; -fx-background-radius: 5;" text="MySongBass.txt">
                                        <padding>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </padding>
@@ -138,56 +138,24 @@
                         <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                      </padding>
                      <HBox.margin>
-                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                        <Insets bottom="2.0" left="2.0" right="10.0" top="2.0" />
                      </HBox.margin>
                   </AnchorPane>
-                  <AnchorPane fx:id="tabSelect11" layoutX="531.0" layoutY="14.0" prefHeight="84.0" style="-fx-background-radius: 4;" styleClass="littleAnchor" stylesheets="@buttonStyleSheet.css">
-                     <padding>
-                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-                     </padding>
+                  <AnchorPane prefHeight="92.0" prefWidth="130.0">
                      <children>
-                        <ImageView fx:id="circleOfFifths" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="7.0">
-                           <image>
-                              <Image url="@../Resources/C.png" />
-                           </image>
-                        </ImageView>
-                     </children>
-                  </AnchorPane>
-                  <AnchorPane>
-                     <children>
-                        <VBox>
+                        <AnchorPane fx:id="tabSelect11" prefHeight="92.0" style="-fx-background-radius: 4;" styleClass="littleAnchor" stylesheets="@buttonStyleSheet.css" AnchorPane.rightAnchor="0.0">
                            <children>
-                              <Button fx:id="loadDataButton" mnemonicParsing="false" onAction="#loadData" prefHeight="10.0" styleClass="lion" stylesheets="@buttonStyleSheet.css" text="Load">
-                                 <VBox.margin>
-                                    <Insets bottom="-3.0" />
-                                 </VBox.margin>
-                              </Button>
-                              <Button fx:id="testButton0" mnemonicParsing="false" onAction="#loadDataTest0" prefHeight="10.0" styleClass="lion" stylesheets="@buttonStyleSheet.css" text="Test 0">
-                                 <VBox.margin>
-                                    <Insets bottom="-3.0" />
-                                 </VBox.margin>
-                              </Button>
-                              <Button fx:id="testButton1" mnemonicParsing="false" onAction="#loadDataTest1" prefHeight="10.0" styleClass="lion" stylesheets="@buttonStyleSheet.css" text="Test 1">
-                                 <VBox.margin>
-                                    <Insets bottom="-3.0" />
-                                 </VBox.margin>
-                              </Button>
-                              <Button fx:id="testButton2" mnemonicParsing="false" onAction="#loadDataTest2" prefHeight="10.0" styleClass="lion" stylesheets="@buttonStyleSheet.css" text="Test 2">
-                                 <VBox.margin>
-                                    <Insets bottom="-3.0" />
-                                 </VBox.margin>
-                              </Button>
+                              <AnchorPane prefHeight="92.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <ImageView fx:id="circleOfFifths" fitHeight="80.0" fitWidth="80.0" onMouseClicked="#openCoF" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="7.0">
+                                       <image>
+                                          <Image url="@../Resources/C.png" />
+                                       </image>
+                                    </ImageView>
+                                 </children>
+                              </AnchorPane>
                            </children>
-                        </VBox>
-                     </children>
-                  </AnchorPane>
-                  <AnchorPane>
-                     <children>
-                        <Button mnemonicParsing="false" onAction="#fileButton" style="-fx-background-color: #844;" text="open" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <font>
-                              <Font name="System Bold" size="10.0" />
-                           </font>
-                        </Button>
+                        </AnchorPane>
                      </children>
                   </AnchorPane>
                </children>

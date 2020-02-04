@@ -58,16 +58,6 @@ public class G13 extends Application {
         
         // Transfer .txt tab file to String
         
-        /*
-        String filePath = "";
-        
-        if (filePathAbs == null){
-            filePath = Paths.get(".").toAbsolutePath().normalize().toString();
-            filePath += "\\src\\guitar13\\tabs\\intro.txt";
-        } else {
-            filePath = filePathAbs;
-        }
-        */
         
         File fileTab = new File(filePathAbs);
         BufferedReader br = new BufferedReader(new FileReader(fileTab)); 
@@ -142,8 +132,6 @@ public class G13 extends Application {
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 
         // When does first '-' or note occur in current line? e.g. "Db|--7--" would be #3 on the dash
-        //int beatStartsAt;
-        //int beatCounter = 0;
 
         // Keep track of when the finished beats end, and the new blank beats will have begun so we can populate them only
         int beatsObjectALLength = 0;

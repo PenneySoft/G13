@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package guitar13;
 
 import java.io.File;
@@ -42,19 +37,22 @@ public class G13Controller implements Initializable {
     // Temporary buffer objects / variables
     private ScatterChart<?, ?> targetChart;
     
+    private ScatterChart<?, ?>[] chartList;
+    
     byte keyAsByte = 0;
     
-    byte currentTrack = 0;
+    byte currentTrack = 10;
     
     ChoiceBox[] startCBs = new ChoiceBox[2];
     ChoiceBox[] endCBs = new ChoiceBox[2];
     
-    int startMemory;
-    int endMemory;
+    int[] startMemory = new int[2];
+    int[] endMemory = new int[2];
     
     String clickedButtonName = "";
     
-    boolean stopItNow = false;
+    BarStarts[] barStarts;
+    
     
     // - - - - -
     
@@ -163,10 +161,28 @@ public class G13Controller implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         populateKeyDropDown();
+        keyDropDown.getSelectionModel().select(0);
+        //keyDropDown.setValue("E");
         startCBs[0] = trackOneStart;
         startCBs[1] = trackTwoStart;
         endCBs[0] = trackOneEnd;
         endCBs[1] = trackTwoEnd;
+        chartList = new ScatterChart<?, ?>[2];
+        chartList[0] = tab1Chart;
+        chartList[1] = tab2Chart;
+        barStarts = new BarStarts[2];
+        barStarts[0] = new BarStarts();
+        barStarts[1] = new BarStarts();
+        
+        keyDropDown.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+                @Override
+                public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
+                    if (currentTrack != 10) {
+                        loadData();
+                    }
+                    //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+            });
         
         for (ChoiceBox box : startCBs){
             box.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
@@ -177,16 +193,14 @@ public class G13Controller implements Initializable {
                     } else {
                         currentTrack = 1;
                     }
-                    startMemory = t1.intValue();
+                    startMemory[currentTrack] = t1.intValue();
                     if (clickedButtonName.equals("")){
                         System.out.println("Was empty, now start");
                         clickedButtonName = ButtonNames.startEnd;
                     }
-                    stopItNow = true;
                     if (clickedButtonName.equals(ButtonNames.startEnd)){
                         loadData();
                     }
-                    stopItNow = true;
                     
                     //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
                 }
@@ -202,16 +216,14 @@ public class G13Controller implements Initializable {
                     } else {
                         currentTrack = 1;
                     }
-                    endMemory = t1.intValue();
+                    endMemory[currentTrack] = t1.intValue();
                     if (clickedButtonName.equals("")){
                         System.out.println("Was empty, now end");
                         clickedButtonName = ButtonNames.startEnd;
                     }
-                    stopItNow = true;
                     if (clickedButtonName.equals(ButtonNames.startEnd)){
                         loadData();
                     }
-                    stopItNow = true;
                     
                     //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
                 }
@@ -233,6 +245,8 @@ public class G13Controller implements Initializable {
     
     public void loadData2() throws Exception {
         
+        targetChart = chartList[currentTrack];
+        
         XYChart.Series set0 = new XYChart.Series<>();
         XYChart.Series set1 = new XYChart.Series<>();
         XYChart.Series set2 = new XYChart.Series<>();
@@ -252,8 +266,10 @@ public class G13Controller implements Initializable {
             G13.getIntro(filePath[currentTrack]);
             populateDropDownsOne();
             System.out.println(" - - Populated drop downs in loadData 2. - -");
+            barStarts[currentTrack] = new BarStarts();
+            barStarts[currentTrack].set(G13.Beats.barStarts);
+            barStarts[currentTrack].setEnd(G13.beats.size()-1);
         }
-
         
         //System.out.println(filePath[currentTrack]);
         targetChart.getData().clear();
@@ -265,91 +281,42 @@ public class G13Controller implements Initializable {
         
         // When to start the graph from
         int start = 0;
-        System.out.println("StartMemory: " + Integer.toString(startMemory));
+        System.out.println("StartMemory: " + Integer.toString(startMemory[currentTrack]));
         if (clickedButtonName.equals(ButtonNames.fileOpen)){
-            start = G13.Beats.barStarts.get(0);
+            start = barStarts[currentTrack].get(0);
         } else {
-            start = G13.Beats.barStarts.get(startMemory);
+            start = barStarts[currentTrack].get(startMemory[currentTrack]);
         }
         System.out.println("Start: " + Integer.toString(start));
         
-        /*
-        if (startMemory == 0){
-            start = 0;
-        } else if (ButtonNames.startEnd.equals(clickedButtonName)){
-            start = G13.Beats.barStarts.get(startMemory);
-        } else {
-            boolean flag = false;
-            String bufferString = startCBs[currentTrack].getValue().toString();
-            start = Integer.parseInt(bufferString);
-            if (start == 1){
-                flag = true;
-            } else {
-                int tempInt = start-1;
-                //System.out.println("barStarts: " + Integer.toString(G13.Beats.barStarts.get(tempInt)));
-                start = G13.Beats.barStarts.get(tempInt);
-            }
-            if (flag){
-                start = 0;
-            }
-        }
-        */
-        
-        //startMemory = start;
-        //System.out.println("Start is " + Integer.toString(start));
-        
         // When to end the graph.
         int end;
-        System.out.println("EndMemory: " + Integer.toString(endMemory));
+        System.out.println("EndMemory: " + Integer.toString(endMemory[currentTrack]));
         int choiceBoxMax = endCBs[currentTrack].getItems().size()-1;
         System.out.println("choiceBoxMax: " + Integer.toString(choiceBoxMax));
-        if (endMemory == choiceBoxMax || clickedButtonName.equals(ButtonNames.fileOpen)){
+        
+        if(clickedButtonName.equals(ButtonNames.fileOpen)){
+            if (barStarts[currentTrack].size() > 2){
+                end = barStarts[currentTrack].get(1);
+            } else {
+                end = barStarts[currentTrack].getEnd();
+            }
+        } else if (endMemory[currentTrack] == choiceBoxMax){
             end = G13.beats.size();
         } else {
-            end = G13.Beats.barStarts.get(endMemory+1);
+            end = barStarts[currentTrack].get(endMemory[currentTrack]+1);
         }
         System.out.println("End: " + Integer.toString(end));
         
-        
-        
-        /*
-        int end;
-        if (ButtonNames.startEnd.equals(clickedButtonName)){
-            end = G13.Beats.barStarts.get(endMemory);
-        } else {
-            int indexOfSelected = endCBs[currentTrack].getSelectionModel().getSelectedIndex();
-            System.out.println(" - - - - - - - - - - - Break point 01");
-            String bufferString = endCBs[currentTrack].getValue().toString();// problem
-            System.out.println(" - - - - - - - - - - - Break point 02");
-            end = Integer.parseInt(bufferString);
 
-            int indexOfLargest;
-            if (endCBs[currentTrack].getItems().size() > 1){
-                indexOfLargest = endCBs[currentTrack].getItems().size()-1; 
-            } else {
-                indexOfLargest = 0;
-            }
-
-            if (indexOfSelected == indexOfLargest){
-                end = G13.beats.size();
-            } else {
-                end = G13.Beats.barStarts.get(end-1);
-            }
-
-            if (ButtonNames.startEnd.equals(clickedButtonName)){
-                //end = G13.beats.size();
-            }
-        }
-        endMemory = end;
-        */
-        
-        //System.out.println("End is " + Integer.toString(end));
-        
         int buffer;
+        int transpose;
+        transpose = keyDropDown.getSelectionModel().getSelectedIndex();
         System.out.println("Start/end used: " + Integer.toString(start) + " / " + Integer.toString(end));
         
         for (int i=start; i<end; i++){
             buffer = G13.beats.get(i).getNote();
+            buffer += (12 - transpose);
             buffer %= 12;
             if ( G13.beats.get(i).isNote() && buffer == 0 ) {
                 set0.getData().add(new XYChart.Data(Integer.toString(i-start), buffer));
@@ -362,11 +329,12 @@ public class G13Controller implements Initializable {
         }
         
         
-        //counter++;
+        
         for (int i=start; i<end; i++){
             buffer = G13.beats.get(i).getNote();
+            buffer += (12 - transpose);
             buffer %= 12;
-            if (G13.beats.get(i).isNote() && G13.beats.get(i).getNote() == 2){
+            if (G13.beats.get(i).isNote() && buffer == 2){
                 set1.getData().add(new XYChart.Data(Integer.toString(i-start), buffer));
                 //System.out.println(buffer);
             } else {
@@ -375,11 +343,12 @@ public class G13Controller implements Initializable {
 
         }
         
-        //counter++;
+        
         for (int i=start; i<end; i++){
             buffer = G13.beats.get(i).getNote();
+            buffer += (12 - transpose);
             buffer %= 12;
-            if (G13.beats.get(i).isNote() && G13.beats.get(i).getNote() == 3){
+            if (G13.beats.get(i).isNote() && buffer == 4){
                 set2.getData().add(new XYChart.Data(Integer.toString(i-start), buffer));
                 //System.out.println(buffer);
             } else {
@@ -388,11 +357,12 @@ public class G13Controller implements Initializable {
 
         }
         
-        //counter++;
+        
         for (int i=start; i<end; i++){
             buffer = G13.beats.get(i).getNote();
+            buffer += (12 - transpose);
             buffer %= 12;
-            if (G13.beats.get(i).isNote() && G13.beats.get(i).getNote() == 5){
+            if (G13.beats.get(i).isNote() && buffer == 5){
                 set3.getData().add(new XYChart.Data(Integer.toString(i-start), buffer));
                 //System.out.println(buffer);
             } else {
@@ -400,11 +370,12 @@ public class G13Controller implements Initializable {
             }
         }
         
-        //counter++;
+        
         for (int i=start; i<end; i++){
             buffer = G13.beats.get(i).getNote();
+            buffer += (12 - transpose);
             buffer %= 12;
-            if (G13.beats.get(i).isNote() && G13.beats.get(i).getNote() == 7){
+            if (G13.beats.get(i).isNote() && buffer == 7){
                 set4.getData().add(new XYChart.Data(Integer.toString(i-start), buffer));
                 //System.out.println(buffer);
             } else {
@@ -412,11 +383,12 @@ public class G13Controller implements Initializable {
             }
         }
         
-        //counter++;
+        
         for (int i=start; i<end; i++){
             buffer = G13.beats.get(i).getNote();
+            buffer += (12 - transpose);
             buffer %= 12;
-            if (G13.beats.get(i).isNote() && G13.beats.get(i).getNote() == 8){
+            if (G13.beats.get(i).isNote() && buffer == 9){
                 set5.getData().add(new XYChart.Data(Integer.toString(i-start), buffer));
                 //System.out.println(buffer);
             } else {
@@ -424,11 +396,12 @@ public class G13Controller implements Initializable {
             }
         }
         
-        //counter++;
+        
         for (int i=start; i<end; i++){
             buffer = G13.beats.get(i).getNote();
+            buffer += (12 - transpose);
             buffer %= 12;
-            if (G13.beats.get(i).isNote() && G13.beats.get(i).getNote() == 10){
+            if (G13.beats.get(i).isNote() && buffer == 11){
                 set6.getData().add(new XYChart.Data(Integer.toString(i-start), buffer));
                 //System.out.println(buffer);
             } else {
@@ -436,16 +409,17 @@ public class G13Controller implements Initializable {
             }
         }
         
-        //counter++;
+        
         for (int i=start; i<end; i++){
             buffer = G13.beats.get(i).getNote();
+            buffer += (12 - transpose);
             buffer %= 12;
             if (G13.beats.get(i).isNote() &&
                     ( (buffer == 1) ||
-                    (buffer == 4) ||
+                    (buffer == 3) ||
                     (buffer == 6) ||
-                    (buffer == 9) ||
-                    (buffer == 11) )){
+                    (buffer == 8) ||
+                    (buffer == 10) )){
                 set7.getData().add(new XYChart.Data(Integer.toString(i-start), buffer));
             } else {
                 set7.getData().add(new XYChart.Data(Integer.toString(i-start), blank));
@@ -466,7 +440,7 @@ public class G13Controller implements Initializable {
         targetChart.getData().addAll(set11);
         //set1.getNode().getStyleClass().add("series-set1");
         keyPercent();
-        String test = Arrays.toString(G13.Beats.barStarts.toArray());
+        String test = Arrays.toString(barStarts[currentTrack].getArray());
         System.out.println("Bar Starts: " + test);
         clickedButtonName = "";
     }
@@ -500,7 +474,6 @@ public class G13Controller implements Initializable {
     
     
     public void populateDropDownsOne(){
-        stopItNow = true;
         System.out.println(" - - populateDropDownsOne - -");
         
         ChoiceBox<String> bufferStart;

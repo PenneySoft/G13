@@ -27,6 +27,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -127,6 +129,8 @@ public class G13Controller implements Initializable {
     private Button bottomTabButton;
     @FXML
     private Label bottomTabLabel;
+    @FXML
+    private Circle circleBG;
     
     void e36700(ActionEvent event) {
         //
@@ -157,7 +161,6 @@ public class G13Controller implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         populateKeyDropDown();
-        keyDropDown.getSelectionModel().select(0);
         //keyDropDown.setValue("E");
         startCBs[0] = trackOneStart;
         startCBs[1] = trackTwoStart;
@@ -177,16 +180,19 @@ public class G13Controller implements Initializable {
                         loadData();
                     }
                     
-                    
                     String key = KeyDropDown.getKeys(keyDropDown.getSelectionModel().getSelectedIndex());
                     File file = new File(CurrentProjectDirectory.resources() + key + ".png");
                     Image image;
                     image = new Image(file.toURI().toString());
-                    circleOfFifths.setImage(image);
+                    //circleOfFifths.setImage(image);
+                    
+                    circleBG.setFill(new ImagePattern(image));
                     
                     //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
                 }
             });
+        
+        keyDropDown.getSelectionModel().select(0);
         
         for (ChoiceBox box : startCBs){
             box.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
@@ -311,12 +317,19 @@ public class G13Controller implements Initializable {
         }
         System.out.println("End: " + Integer.toString(end));
         
+        Boolean minor = keyDropDown.getSelectionModel().getSelectedIndex() > 12;
 
         int buffer;
         int transpose;
         transpose = keyDropDown.getSelectionModel().getSelectedIndex();
+        if (minor){
+            transpose %= 12;
+            transpose -= 3;
+        }
+        
         System.out.println("Start/end used: " + Integer.toString(start) + " / " + Integer.toString(end));
         
+        // Root
         for (int i=start; i<end; i++){
             buffer = G13.beats.get(i).getNote();
             buffer += (12 - transpose);
@@ -328,11 +341,10 @@ public class G13Controller implements Initializable {
             } else {
                 set0.getData().add(new XYChart.Data(Integer.toString(i-start), blank));
             }
-            
         }
         
         
-        
+        // 2nd
         for (int i=start; i<end; i++){
             buffer = G13.beats.get(i).getNote();
             buffer += (12 - transpose);
@@ -343,24 +355,40 @@ public class G13Controller implements Initializable {
             } else {
                 set1.getData().add(new XYChart.Data(Integer.toString(i-start), blank));
             }
-
         }
         
         
-        for (int i=start; i<end; i++){
-            buffer = G13.beats.get(i).getNote();
-            buffer += (12 - transpose);
-            buffer %= 12;
-            if (G13.beats.get(i).isNote() && buffer == 4){
-                set2.getData().add(new XYChart.Data(Integer.toString(i-start), buffer));
-                //System.out.println(buffer);
-            } else {
-                set2.getData().add(new XYChart.Data(Integer.toString(i-start), blank));
+        if (minor){
+            // Minor 3rd
+            for (int i=start; i<end; i++){
+                buffer = G13.beats.get(i).getNote();
+                buffer += (12 - transpose);
+                buffer %= 12;
+                if (G13.beats.get(i).isNote() && buffer == 3){
+                    set2.getData().add(new XYChart.Data(Integer.toString(i-start), buffer));
+                    //System.out.println(buffer);
+                } else {
+                    set2.getData().add(new XYChart.Data(Integer.toString(i-start), blank));
+                }
             }
-
+        } else {
+            // Major 3rd
+            for (int i=start; i<end; i++){
+                buffer = G13.beats.get(i).getNote();
+                buffer += (12 - transpose);
+                buffer %= 12;
+                if (G13.beats.get(i).isNote() && buffer == 4){
+                    set2.getData().add(new XYChart.Data(Integer.toString(i-start), buffer));
+                    //System.out.println(buffer);
+                } else {
+                    set2.getData().add(new XYChart.Data(Integer.toString(i-start), blank));
+                }
+            }
         }
         
         
+        
+        // 4th
         for (int i=start; i<end; i++){
             buffer = G13.beats.get(i).getNote();
             buffer += (12 - transpose);
@@ -373,7 +401,7 @@ public class G13Controller implements Initializable {
             }
         }
         
-        
+        // 5th
         for (int i=start; i<end; i++){
             buffer = G13.beats.get(i).getNote();
             buffer += (12 - transpose);
@@ -386,48 +414,99 @@ public class G13Controller implements Initializable {
             }
         }
         
-        
-        for (int i=start; i<end; i++){
-            buffer = G13.beats.get(i).getNote();
-            buffer += (12 - transpose);
-            buffer %= 12;
-            if (G13.beats.get(i).isNote() && buffer == 9){
-                set5.getData().add(new XYChart.Data(Integer.toString(i-start), buffer));
-                //System.out.println(buffer);
-            } else {
-                set5.getData().add(new XYChart.Data(Integer.toString(i-start), blank));
+        if (minor) {
+            // minor 6th
+            for (int i=start; i<end; i++){
+                buffer = G13.beats.get(i).getNote();
+                buffer += (12 - transpose);
+                buffer %= 12;
+                if (G13.beats.get(i).isNote() && buffer == 8){
+                    set5.getData().add(new XYChart.Data(Integer.toString(i-start), buffer));
+                    //System.out.println(buffer);
+                } else {
+                    set5.getData().add(new XYChart.Data(Integer.toString(i-start), blank));
+                }
+            }
+        } else {
+            // major 6th
+            for (int i=start; i<end; i++){
+                buffer = G13.beats.get(i).getNote();
+                buffer += (12 - transpose);
+                buffer %= 12;
+                if (G13.beats.get(i).isNote() && buffer == 9){
+                    set5.getData().add(new XYChart.Data(Integer.toString(i-start), buffer));
+                    //System.out.println(buffer);
+                } else {
+                    set5.getData().add(new XYChart.Data(Integer.toString(i-start), blank));
+                }
             }
         }
         
         
-        for (int i=start; i<end; i++){
-            buffer = G13.beats.get(i).getNote();
-            buffer += (12 - transpose);
-            buffer %= 12;
-            if (G13.beats.get(i).isNote() && buffer == 11){
-                set6.getData().add(new XYChart.Data(Integer.toString(i-start), buffer));
-                //System.out.println(buffer);
-            } else {
-                set6.getData().add(new XYChart.Data(Integer.toString(i-start), blank));
+        if (minor){
+            // minor 7th
+            for (int i=start; i<end; i++){
+                buffer = G13.beats.get(i).getNote();
+                buffer += (12 - transpose);
+                buffer %= 12;
+                if (G13.beats.get(i).isNote() && buffer == 10){
+                    set6.getData().add(new XYChart.Data(Integer.toString(i-start), buffer));
+                    //System.out.println(buffer);
+                } else {
+                    set6.getData().add(new XYChart.Data(Integer.toString(i-start), blank));
+                }
+            }
+        } else {
+            // major 7th
+            for (int i=start; i<end; i++){
+                buffer = G13.beats.get(i).getNote();
+                buffer += (12 - transpose);
+                buffer %= 12;
+                if (G13.beats.get(i).isNote() && buffer == 11){
+                    set6.getData().add(new XYChart.Data(Integer.toString(i-start), buffer));
+                    //System.out.println(buffer);
+                } else {
+                    set6.getData().add(new XYChart.Data(Integer.toString(i-start), blank));
+                }
             }
         }
         
-        
-        for (int i=start; i<end; i++){
-            buffer = G13.beats.get(i).getNote();
-            buffer += (12 - transpose);
-            buffer %= 12;
-            if (G13.beats.get(i).isNote() &&
-                    ( (buffer == 1) ||
-                    (buffer == 3) ||
-                    (buffer == 6) ||
-                    (buffer == 8) ||
-                    (buffer == 10) )){
-                set7.getData().add(new XYChart.Data(Integer.toString(i-start), buffer));
-            } else {
-                set7.getData().add(new XYChart.Data(Integer.toString(i-start), blank));
+        if (minor){
+            // minor offkey
+            for (int i=start; i<end; i++){
+                buffer = G13.beats.get(i).getNote();
+                buffer += (12 - transpose);
+                buffer %= 12;
+                if (G13.beats.get(i).isNote() &&
+                        ( (buffer == 1) ||
+                        (buffer == 4) ||
+                        (buffer == 6) ||
+                        (buffer == 9) ||
+                        (buffer == 11) )){
+                    set7.getData().add(new XYChart.Data(Integer.toString(i-start), buffer));
+                } else {
+                    set7.getData().add(new XYChart.Data(Integer.toString(i-start), blank));
+                }
+            }
+        } else {
+            // Major offkey
+            for (int i=start; i<end; i++){
+                buffer = G13.beats.get(i).getNote();
+                buffer += (12 - transpose);
+                buffer %= 12;
+                if (G13.beats.get(i).isNote() &&
+                        ( (buffer == 1) ||
+                        (buffer == 3) ||
+                        (buffer == 6) ||
+                        (buffer == 8) ||
+                        (buffer == 10) )){
+                    set7.getData().add(new XYChart.Data(Integer.toString(i-start), buffer));
+                } else {
+                    set7.getData().add(new XYChart.Data(Integer.toString(i-start), blank));
+                }
             }
         }
+        
         
         targetChart.getData().addAll(set0);
         targetChart.getData().addAll(set1);
@@ -441,6 +520,8 @@ public class G13Controller implements Initializable {
         targetChart.getData().addAll(set9);
         targetChart.getData().addAll(set10);
         targetChart.getData().addAll(set11);
+        targetChart.getXAxis().setTickMarkVisible(false);
+        targetChart.getXAxis().setOpacity(0);
         //set1.getNode().getStyleClass().add("series-set1");
         keyPercent();
         String test = Arrays.toString(barStarts[currentTrack].getArray());
@@ -597,8 +678,6 @@ public class G13Controller implements Initializable {
         
         loadData();
     }
-    
-    // Listeners - - - - - -
 
     @FXML
     private void openCoF(MouseEvent event) {
@@ -630,17 +709,6 @@ public class G13Controller implements Initializable {
         window.show();
         
     }
-    
-    /*
-    
-    <ImageView fx:id="circleOfFifths" fitHeight="80.0" fitWidth="80.0" onMouseClicked="#openCoF" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="7.0">
-                                       <image>
-                                          <Image url="@../Resources/C.png" />
-                                       </image>
-                                    </ImageView>
-    
-    */
-
     
 } // end of controller
 

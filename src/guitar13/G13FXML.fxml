@@ -18,6 +18,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane id="AnchorPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="910.0" styleClass="anchorBG" stylesheets="@buttonStyleSheet.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="guitar13.G13Controller">
@@ -29,7 +30,7 @@
          <children>
             <HBox id="topNav" prefHeight="134.0" prefWidth="910.0" stylesheets="@buttonStyleSheet.css">
                <children>
-                  <AnchorPane prefHeight="105.0" prefWidth="120.0" style="-fx-background-radius: 15;" styleClass="littleAnchor" stylesheets="@buttonStyleSheet.css">
+                  <AnchorPane prefHeight="84.0" prefWidth="120.0" style="-fx-background-radius: 15;" styleClass="littleAnchor" stylesheets="@buttonStyleSheet.css">
                      <children>
                         <Label alignment="CENTER" layoutX="10.0" layoutY="18.0" prefHeight="84.0" prefWidth="120.0" styleClass="orange" stylesheets="@buttonStyleSheet.css" text="GuitarAnalyse" textAlignment="CENTER" textFill="#e36700" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <padding>
@@ -44,7 +45,7 @@
                         <Insets bottom="2.0" left="2.0" right="16.0" top="2.0" />
                      </HBox.margin>
                   </AnchorPane>
-                  <AnchorPane prefHeight="92.0" prefWidth="350.0" style="-fx-background-radius: 5;" styleClass="littleAnchor" stylesheets="@buttonStyleSheet.css">
+                  <AnchorPane prefHeight="84.0" prefWidth="350.0" style="-fx-background-radius: 5;" styleClass="littleAnchor" stylesheets="@buttonStyleSheet.css">
                      <children>
                         <VBox prefHeight="88.0" prefWidth="350.0" stylesheets="@buttonStyleSheet.css" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="2.0">
                            <children>
@@ -141,13 +142,14 @@
                         <Insets bottom="2.0" left="2.0" right="10.0" top="2.0" />
                      </HBox.margin>
                   </AnchorPane>
-                  <AnchorPane prefHeight="92.0" prefWidth="130.0">
+                  <AnchorPane prefHeight="84.0" prefWidth="130.0">
                      <children>
-                        <AnchorPane fx:id="tabSelect11" prefHeight="92.0" style="-fx-background-radius: 4;" styleClass="littleAnchor" stylesheets="@buttonStyleSheet.css" AnchorPane.rightAnchor="0.0">
+                        <AnchorPane fx:id="tabSelect11" prefHeight="84.0" style="-fx-background-radius: 4;" styleClass="littleAnchor" stylesheets="@buttonStyleSheet.css" AnchorPane.rightAnchor="0.0">
                            <children>
-                              <AnchorPane prefHeight="92.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <AnchorPane prefHeight="84.0" style="-fx-background-radius: 40; -fx-border-radius: 40;" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
-                                    <ImageView fx:id="circleOfFifths" fitHeight="80.0" fitWidth="80.0" onMouseClicked="#openCoF" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="7.0">
+                                    <Circle fx:id="circleBG" fill="WHITE" radius="44.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-opacity: 100;" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                                    <ImageView fx:id="circleOfFifths" blendMode="DARKEN" fitHeight="80.0" fitWidth="80.0" onMouseClicked="#openCoF" pickOnBounds="true" preserveRatio="true" style="-fx-opacity: 0;" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="7.0">
                                        <image>
                                           <Image url="@../Resources/C.png" />
                                        </image>

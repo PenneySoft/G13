@@ -6,18 +6,20 @@
 
 #
 
-- Guitar tab in standard .txt format, to open in GuitarAnalyze
+- Guitar tab in standard .txt format, to open in GuitarAnalyze.
 
 <img src="https://raw.githubusercontent.com/PenneySoft/G13/master/Asset/Tab.jpg">
 
 #
 
-- Key selection transposes the data into the correct key, with analysis run on all Major and Minor key signature to display how many notes in the file fall into that key signature as a percentage
+- Key selection transposes the data into the correct key, with analysis run on all Major and Minor key signatures to display how many notes in the file fall into that key signature as a percentage.
+
+- Circle of Fifths diagrams are easily accessible in the top-right hand corner to complement chord progressions.
 
 <img src="https://raw.githubusercontent.com/PenneySoft/G13/master/Asset/GAKey.jpg">
 
 #
 
-- The musical relationship between different instruments can be seen clearly
+- The musical relationship between different instruments can be seen clearly.
 
 <img src="https://raw.githubusercontent.com/PenneySoft/G13/master/Asset/GAPumpkins.jpg">

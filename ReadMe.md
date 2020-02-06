@@ -6,8 +6,18 @@
 
 #
 
-<img src="">
+- Guitar tab in standard .txt format, to open in GuitarAnalyze
+
+<img src="https://raw.githubusercontent.com/PenneySoft/G13/master/Asset/Tab.jpg">
 
 #
 
-<img src="">
+- Key selection transposes the data into the correct key, with analysis run on all Major and Minor key signature to display how many notes in the file fall into that key signature as a percentage
+
+<img src="https://raw.githubusercontent.com/PenneySoft/G13/master/Asset/GAKey.jpg">
+
+#
+
+- The musical relationship between different instruments can be seen clearly
+
+<img src="https://raw.githubusercontent.com/PenneySoft/G13/master/Asset/GAPumpkins.jpg">
